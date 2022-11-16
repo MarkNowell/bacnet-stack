@@ -190,6 +190,7 @@ static struct Address_Cache_Entry *address_remove_oldest(
 }
 
 
+#ifndef MN_NOADDRCACHE
 /* File format:
 DeviceID MAC SNET SADR MAX-APDU
 4194303 05 0 0 50
@@ -254,7 +255,7 @@ static void address_file_init(
 
     return;
 }
-
+#endif
 
 /****************************************************************************
  * Clear down the cache and make sure the full complement of entries are    *
@@ -271,8 +272,9 @@ void address_init(
         pMatch->Flags = 0;
         pMatch++;
     }
+	#ifndef MN_NOADDRCACHE
     address_file_init(Address_Cache_Filename);
-
+	#endif
     return;
 }
 
@@ -303,8 +305,9 @@ void address_init_partial(
 
         pMatch++;
     }
+	#ifndef MN_NOADDRCACHE
     address_file_init(Address_Cache_Filename);
-
+	#endif
     return;
 }
 

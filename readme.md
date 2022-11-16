@@ -1,4 +1,27 @@
+Dicam BACnet Bridge - LAN2BAC
+---
+
+Original bacnet-stack readme is included below. Dicam LAN2BAC bridge was originally developed in 2014 and based on bacnet-stack 0.8.2. In Nov 2022 it has been recreated as a fork of current bacnet-stack (1.0.0) and a branch from 0.8.2. 
+
+LAN2BAC - Arduino Mega2560 build
+---
+This version of the bridge can be built using the AtmelStudio project: 
+* ports\bdk-atxx4-mstp\bac-client.atsln
+
+As of 2022-11-15 the hardware configuration is the original hardware configuration for non-isolated 485 shield.
+
+Program/test instructions for original board:
+* ports\bdk-atxx4-mstp\485 shield production test.ods
+
+---
+
+Text below is from original 0.8.2 readme.txt (may/not format appropriately as markdown)
+---
+
+---
+
 BACnet open source protocol stack for embedded systems, Linux, and Windows
+---
 http://bacnet.sourceforge.net/
 
 Welcome to the wonderful world of BACnet and true device interoperability!

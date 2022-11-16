@@ -13,3 +13,8 @@
 *.atsuo
 *.a
 *.bin
+*.xslt
+*.xml
+ports/bdk-atxx4-mstp/default/
+ports/bdk-atxx4-mstp/m2560/bac2slan-hw/Debug/
+ports/bdk-atxx4-mstp/m2560/bac2slanhw/default/

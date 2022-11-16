@@ -1,0 +1,15 @@
+*.o
+*.d
+*.eep
+*.elf
+*.hex
+*.lst
+*.map
+*.lst
+*.lss
+*.srec
+*.nm
+*.mk
+*.atsuo
+*.a
+*.bin

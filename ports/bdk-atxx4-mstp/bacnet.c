@@ -91,7 +91,8 @@ void bacnet_init(
     uint32_t device_id = 0;
     uint8_t max_master = 0;
 
-    MSTP_MAC_Address = input_address();
+    // MSTP_MAC_Address = input_address();
+		eeprom_bytes_read(NV_EEPROM_MAC, &MSTP_MAC_Address, 1) ;
     dlmstp_set_mac_address(MSTP_MAC_Address);
     eeprom_bytes_read(NV_EEPROM_MAX_MASTER, &max_master, 1);
     if (max_master > 127) {
@@ -146,60 +147,67 @@ void bacnet_task(
     uint8_t mstp_mac_address;
     uint16_t pdu_len;
     BACNET_ADDRESS src; /* source address */
-    uint16_t value;
-    bool button_value;
-    uint8_t i;
-    BACNET_BINARY_PV binary_value = BINARY_INACTIVE;
-    BACNET_POLARITY polarity;
-    bool out_of_service;
 
-    mstp_mac_address = input_address();
+    // mstp_mac_address = input_address();
+		eeprom_bytes_read(NV_EEPROM_MAC, &mstp_mac_address, 1) ;
     if (MSTP_MAC_Address != mstp_mac_address) {
         /* address changed! */
         MSTP_MAC_Address = mstp_mac_address;
         dlmstp_set_mac_address(MSTP_MAC_Address);
         Send_I_Am(&Handler_Transmit_Buffer[0]);
     }
-    /* handle the inputs */
-    value = adc_result_10bit(7);
-    Analog_Input_Present_Value_Set(0, value);
-    for (i = 0; i < 5; i++) {
-        button_value = input_button_value(i);
-        if (button_value) {
-            binary_value = BINARY_ACTIVE;
-        } else {
-            binary_value = BINARY_INACTIVE;
-        }
-        Binary_Input_Present_Value_Set(i, binary_value);
-    }
-    /* Binary Output */
-    for (i = 0; i < 2; i++) {
-        out_of_service = Binary_Output_Out_Of_Service(i);
-        if (!out_of_service) {
-            binary_value = Binary_Output_Present_Value(i);
-            polarity = Binary_Output_Polarity(i);
-            if (polarity != POLARITY_NORMAL) {
-                if (binary_value == BINARY_ACTIVE) {
-                    binary_value = BINARY_INACTIVE;
-                } else {
-                    binary_value = BINARY_ACTIVE;
-                }
-            }
-            if (binary_value == BINARY_ACTIVE) {
-                if (i == 0) {
-                    led_on(LED_2);
-                } else {
-                    led_on(LED_3);
-                }
-            } else {
-                if (i == 0) {
-                    led_off(LED_2);
-                } else {
-                    led_off(LED_3);
-                }
-            }
-        }
-    }
+#ifndef MN_CLIENT
+		{
+	    uint16_t value;
+	    bool button_value;
+	    uint8_t i;
+	    BACNET_BINARY_PV binary_value = BINARY_INACTIVE;
+	    BACNET_POLARITY polarity;
+	    bool out_of_service;
+	    /* handle the inputs */
+			for ( i = 0 ; i < MAX_ANALOG_INPUTS ; i++ ) {
+		    value = adc_result_10bit(i);
+		    Analog_Input_Present_Value_Set(i, value / 100.0) ;
+			} ;
+	    for (i = 0; i < 5; i++) {
+	        button_value = input_button_value(i);
+	        if (button_value) {
+	            binary_value = BINARY_ACTIVE;
+	        } else {
+	            binary_value = BINARY_INACTIVE;
+	        }
+	        Binary_Input_Present_Value_Set(i, binary_value);
+	    }
+	    /* Binary Output */
+	    for (i = 0; i < 2; i++) {
+	        out_of_service = Binary_Output_Out_Of_Service(i);
+	        if (!out_of_service) {
+	            binary_value = Binary_Output_Present_Value(i);
+	            polarity = Binary_Output_Polarity(i);
+	            if (polarity != POLARITY_NORMAL) {
+	                if (binary_value == BINARY_ACTIVE) {
+	                    binary_value = BINARY_INACTIVE;
+	                } else {
+	                    binary_value = BINARY_ACTIVE;
+	                }
+	            }
+	            if (binary_value == BINARY_ACTIVE) {
+	                if (i == 0) {
+	                    led_on(LED_BO_0);
+	                } else {
+	                    led_on(LED_BO_1);
+	                }
+	            } else {
+	                if (i == 0) {
+	                    led_off(LED_BO_0);
+	                } else {
+	                    led_off(LED_BO_1);
+	                }
+	            }
+	        }
+	    }
+		}
+#endif
     /* handle the communication timer */
     if (timer_interval_expired(&DCC_Timer)) {
         timer_interval_reset(&DCC_Timer);

@@ -52,17 +52,18 @@ void test_init(
 #ifdef MSTP_MONITOR
     serial_baud_rate_set(115200);
 #else
-    serial_baud_rate_set(9600);
+    serial_baud_rate_set(BAUD_SERIAL_DEFAULT);
 #endif
     timer_interval_start_seconds(&Test_Timer, 1);
-    /* configure a port pin as output */
+    /* configure a port pin as output 
 #if (BDK_VERSION==4)
     BIT_SET(DDRD, DDB5);
 #else
     BIT_SET(DDRB, DDB0);
-#endif
+#endif */
 }
 
+#if 0
 /*************************************************************************
 * Description: Turn on a pin
 * Returns: none
@@ -122,6 +123,7 @@ static inline void test_pin_toggle(
         test_pin_on();
     }
 }
+#endif
 
 #ifdef MSTP_MONITOR
 void test_task(
@@ -144,7 +146,7 @@ void test_task(
     if (timer_interval_expired(&Test_Timer)) {
         timer_interval_reset(&Test_Timer);
         sprintf(Send_Buffer, "BACnet: 0000000\r\n");
-        MSTP_MAC_Address = input_address();
+        MSTP_MAC_Address = dlmstp_mac_address();
         Send_Buffer[8] = (MSTP_MAC_Address & BIT0) ? '1' : '0';
         Send_Buffer[9] = (MSTP_MAC_Address & BIT1) ? '1' : '0';
         Send_Buffer[10] = (MSTP_MAC_Address & BIT2) ? '1' : '0';
@@ -207,6 +209,6 @@ void test_task(
         serial_byte_send('\n');
         serial_byte_transmit_complete();
     }
-    test_pin_toggle();
+    // test_pin_toggle();
 }
 #endif

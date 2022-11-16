@@ -33,7 +33,7 @@
 #include "rs485.h"
 
 /* baud rate */
-static uint32_t Baud_Rate = 9600;
+static uint32_t Baud_Rate = BAUD_485_DEFAULT ;
 
 /* The minimum time after the end of the stop bit of the final octet of a */
 /* received frame before a node may enable its EIA-485 driver: 40 bit times. */
@@ -84,7 +84,8 @@ static void rs485_rts_init(
     void)
 {
     /* configure the port pin as an output */
-    BIT_SET(DDRD, DDD4);
+		// all I/O configured in main.c
+    // BIT_SET(DDRD, DDD4);
 }
 
 /****************************************************************************
@@ -96,9 +97,11 @@ void rs485_rts_enable(
     bool enable)
 {
     if (enable) {
-        BIT_SET(PORTD, PD4);
+			BIT_BAC_DE = 1 ;
+			BIT_BAC_RE = 1 ;
     } else {
-        BIT_CLEAR(PORTD, PD4);
+			BIT_BAC_DE = 0 ;
+			BIT_BAC_RE = 0 ;
     }
 }
 
@@ -110,7 +113,7 @@ void rs485_rts_enable(
 static void rs485_receiver_enable(
     void)
 {
-    UCSR0B = _BV(TXEN0) | _BV(RXEN0) | _BV(RXCIE0);
+    UCSR1B = _BV(TXEN1) | _BV(RXEN1) | _BV(RXCIE1);
 }
 
 /****************************************************************************
@@ -129,18 +132,18 @@ void rs485_turnaround_delay(
     rs485_rts_enable(false);
     while (nbytes) {
         /* Send the data byte */
-        UDR0 = 0xff;
-        while (!BIT_CHECK(UCSR0A, UDRE0)) {
+        UDR1 = 0xff;
+        while (!bUCSR1A(udre)) {
             /* do nothing - wait until Tx buffer is empty */
         }
         nbytes--;
     }
-    while (!BIT_CHECK(UCSR0A, TXC0)) {
+    while (!bUCSR1A(txc)) {
         /* do nothing - wait until the entire frame in the
            Transmit Shift Register has been shifted out */
     }
     /* Clear the Transmit Complete flag by writing a one to it. */
-    BIT_SET(UCSR0A, TXC0);
+		bUCSR1A(txc) = 1 ;
 }
 
 /****************************************************************************
@@ -148,15 +151,15 @@ void rs485_turnaround_delay(
 * RETURN:      nothing
 * NOTES:       none
 *****************************************************************************/
-ISR(USART0_RX_vect)
+ISR(USART1_RX_vect)
 {
     uint8_t data_byte;
 
-    if (BIT_CHECK(UCSR0A, RXC0)) {
+    if (bUCSR1A(rxc)) {
         /* data is available */
-        data_byte = UDR0;
+        data_byte = UDR1 ;
 #ifdef MSTP_MONITOR
-        UDR1 = data_byte;
+        UDR0 = data_byte;
 #endif
         (void) FIFO_Put(&Receive_Buffer, data_byte);
     }
@@ -173,7 +176,7 @@ bool rs485_byte_available(
     bool data_available = false;        /* return value */
 
     if (!FIFO_Empty(&Receive_Buffer)) {
-        led_on_interval(LED_4, 1);
+        led_on_interval(LED_BRX, 1);
         if (data_register) {
             *data_register = FIFO_Get(&Receive_Buffer);
         }
@@ -203,31 +206,31 @@ void rs485_bytes_send(
     uint8_t * buffer,   /* data to send */
     uint16_t nbytes)
 {       /* number of bytes of data */
-    led_on(LED_5);
-    while (!BIT_CHECK(UCSR0A, UDRE0)) {
+    led_on(LED_BTX);
+    while (!bUCSR1A(udre)) {
         /* do nothing - wait until Tx buffer is empty */
     }
     while (nbytes) {
         /* Send the data byte */
-        UDR0 = *buffer;
-#ifdef MSTP_MONITOR
         UDR1 = *buffer;
+#ifdef MSTP_MONITOR
+        UDR0 = *buffer;
 #endif
-        while (!BIT_CHECK(UCSR0A, UDRE0)) {
+        while (!bUCSR1A(udre)) {
             /* do nothing - wait until Tx buffer is empty */
         }
         buffer++;
         nbytes--;
     }
     /* was the frame sent? */
-    while (!BIT_CHECK(UCSR0A, TXC0)) {
+    while (!bUCSR1A(txc)) {
         /* do nothing - wait until the entire frame in the
            Transmit Shift Register has been shifted out */
     }
     /* Clear the Transmit Complete flag by writing a one to it. */
-    BIT_SET(UCSR0A, TXC0);
+    bUCSR1A(txc) = 1 ;
     timer_elapsed_start(&Silence_Timer);
-    led_off_delay(LED_5, 1);
+    led_off_delay(LED_BTX, 1);
 
     return;
 }
@@ -252,9 +255,9 @@ static void rs485_baud_rate_configure(
     void)
 {
     /* 2x speed mode */
-    BIT_SET(UCSR0A, U2X0);
+		bUCSR1A(u2x) = 1 ;
     /* configure baud rate */
-    UBRR0 = (F_CPU / (8UL * Baud_Rate)) - 1;
+    UBRR1 = (F_CPU / (8UL * Baud_Rate)) - 1;
 }
 
 /****************************************************************************
@@ -297,11 +300,12 @@ bool rs485_baud_rate_set(
 static void rs485_usart_init(
     void)
 {
+		// basic I/O config is in main.c so disabled here
     /* enable the internal pullup on RXD0 */
-    BIT_CLEAR(DDRD, DDD0);
-    BIT_SET(PORTD, PD0);
+    // BIT_CLEAR(DDRD, DDD0);
+    // BIT_SET(PORTD, PD0);
     /* enable Transmit and Receive */
-    UCSR0B = _BV(TXEN0) | _BV(RXEN0);
+    UCSR1B = _BV(TXEN1) | _BV(RXEN1);
     /* Set USART Control and Status Register n C */
     /* Asynchronous USART 8-bit data, No parity, 1 stop */
     /* Set USART Mode Select: UMSELn1 UMSELn0 = 00 for Asynchronous USART */
@@ -309,8 +313,8 @@ static void rs485_usart_init(
     /* Set Stop Bit Select: USBSn = 0 for 1 stop bit */
     /* Set Character Size: UCSZn2 UCSZn1 UCSZn0 = 011 for 8-bit */
     /* Clock Polarity: UCPOLn = 0 when asynchronous mode is used. */
-    UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);
-    power_usart0_enable();
+    UCSR1C = _BV(UCSZ11) | _BV(UCSZ10);
+    power_usart1_enable();
 }
 
 /****************************************************************************
@@ -345,8 +349,8 @@ static void rs485_init_nvdata(
             break;
         default:
             /* not configured yet */
-            Baud_Rate = 38400;
-            baud_k = 38400 / 1000;
+            Baud_Rate = BAUD_485_DEFAULT ;
+            baud_k = BAUD_485_DEFAULT / 1000;
             eeprom_bytes_write(NV_EEPROM_BAUD_K, &baud_k, 1);
             break;
     }

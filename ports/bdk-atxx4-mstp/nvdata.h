@@ -28,22 +28,49 @@
 #include "seeprom.h"
 #include "eeprom.h"
 
-/*=============== EEPROM ================*/
-/* define the MAC, BAUD, MAX Master, Device Instance internal
-   so that bootloader *could* use them. */
-/* note: MAC could come from DIP switch, or be in non-volatile memory */
-#define NV_EEPROM_MAC 0
-/* 9=9.6k, 19=19.2k, 38=38.4k, 57=57.6k, 76=76.8k, 115=115.2k */
-#define NV_EEPROM_BAUD_K 1
-#define NV_EEPROM_MAX_MASTER 2
-/* device instance is only 22 bits - easier if we use 32 bits */
-#define NV_EEPROM_DEVICE_0 3
-#define NV_EEPROM_DEVICE_1 4
-#define NV_EEPROM_DEVICE_2 5
-#define NV_EEPROM_DEVICE_3 6
+#define L2B_SENSORS		8
+#define L2B_OUTPUTS		8
+#define L2B_DEVS			(L2B_SENSORS + L2B_OUTPUTS)
 
-/* EEPROM free space - 7..31 */
+typedef enum {
+	ST_UNUSED = 0, ST_UNUSEDHI,		// app fudges procid when asked for word @ 0
 
+	/*=============== NV_ locations used by BACnet client/server ================*/
+	NV_EEPROM_MAC,				// this is the MAC (MSTP) address on the BACnet side 
+	NV_EEPROM_BAUD_K, 		// BACnet baud 9=9.6k, 19=19.2k, 38=38.4k, 57=57.6k, 76=76.8k, 115=115.2k 
+	NV_EEPROM_MAX_MASTER,	// BACnet max-master
+	
+	NV_EEPROM_DEVICE_0, 	// device instance is only 22 bits - easier if we use 32 bits 
+	NV_EEPROM_DEVICE_1,
+	NV_EEPROM_DEVICE_2,
+	NV_EEPROM_DEVICE_3,
+
+	/* ============== ST_ locations used for LAN comms ========================== */
+  // Program ID
+  ST_APPID, ST_APPIDHI,			// @ 9/10
+	
+	// Resets
+	ST_RESETS, ST_RESETSHI,
+
+  // System config
+	ST_LANADDR,
+	ST_LANTXCYCLE,
+	ST_TIMEOUT,									// I/O timeout
+	ST_ICACTIVE,								// ICActive mask - applies to ADC chans only
+	
+	/* =============== BACnet server config ==================================== */
+	ST_SERVERMAC,
+	
+	// LAN-2-BAC device mapping table - maps sensor and output channels to BACnet object/instances
+	ST_L2B_OBJ0, ST_L2B_INST0,
+#define L2B_BYTES		2
+	ST_L2B_END = ST_L2B_OBJ0 + L2B_DEVS * L2B_BYTES - 1,
+	
+  ST_END
+} TStatus ;
+
+
+/*=================== BACnet strings - allow 1K data starting at 1K offset ==============================*/
 /* BACnet Names - 32 bytes of data each */
 #define NV_EEPROM_NAME_LENGTH(n) ((n)+0)
 #define NV_EEPROM_NAME_ENCODING(n) ((n)+1)
@@ -51,7 +78,7 @@
 #define NV_EEPROM_NAME_SIZE 30
 #define NV_EEPROM_NAME_OFFSET (1+1+NV_EEPROM_NAME_SIZE)
 /* Device Name - starting offset */
-#define NV_EEPROM_DEVICE_NAME 32
+#define NV_EEPROM_DEVICE_NAME 1024
 /* Device Description - starting offset  */
 #define NV_EEPROM_DEVICE_DESCRIPTION \
     (NV_EEPROM_DEVICE_NAME+NV_EEPROM_NAME_OFFSET)
@@ -59,9 +86,7 @@
 #define NV_EEPROM_DEVICE_LOCATION \
     (NV_EEPROM_DEVICE_DESCRIPTION+NV_EEPROM_NAME_OFFSET)
 
-/* EEPROM free space 128..1024 */
-
-/*=============== SEEPROM ================*/
+/*=============== SEEPROM maps to internal EEPROM from 2K ================*/
 /* data version - use to check valid version */
 #define SEEPROM_ID 0xBAC0
 #define SEEPROM_VERSION 0x0001

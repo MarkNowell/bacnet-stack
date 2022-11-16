@@ -38,9 +38,10 @@
 #include "av.h"
 #include "handlers.h"
 #include "hardware.h"
+#include "serial.h"
 
 #ifndef MAX_ANALOG_VALUES
-#define MAX_ANALOG_VALUES 2
+#define MAX_ANALOG_VALUES 40
 #endif
 
 static float Present_Value[MAX_ANALOG_VALUES];
@@ -143,6 +144,9 @@ float Analog_Value_Present_Value(
     index = Analog_Value_Instance_To_Index(object_instance);
     if (index < MAX_ANALOG_VALUES) {
         value = Present_Value[index];
+
+				serLen = sprintf(serBuf, "AV[%d] => %f", index, (double) value) ;
+		    serial_bytes_send((uint8_t *) serBuf, serLen) ;
     }
 
     return value;
@@ -169,6 +173,8 @@ bool Analog_Value_Present_Value_Set(
                physical output.  This comment may apply to the
                main loop (i.e. check out of service before changing output) */
             status = true;
+						serLen = sprintf(serBuf, "AV[%d] <= %f", index, (double) value) ;
+				    serial_bytes_send((uint8_t *) serBuf, serLen) ;
         }
     }
     return status;
@@ -185,7 +191,7 @@ bool Analog_Value_Object_Name(
 
     index = Analog_Value_Instance_To_Index(object_instance);
     if (index < MAX_ANALOG_VALUES) {
-        sprintf(text_string, "AV-%lu", object_instance);
+        sprintf(text_string, "\r\nAV-%lu", object_instance);
         status = characterstring_init_ansi(object_name, text_string);
     }
 

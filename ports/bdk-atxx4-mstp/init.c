@@ -53,6 +53,7 @@ void init(
     /* Initialize I/O ports */
     /* For Port DDRx (Data Direction) Input=0, Output=1 */
     /* For Port PORTx (Bit Value) TriState=0, High=1 */
+		/* -- all I/O setup in main.c 
     DDRA = 0;
     PORTA = 0;
     DDRB = 0;
@@ -61,4 +62,5 @@ void init(
     PORTC = 0;
     DDRD = 0;
     PORTD = 0;
+		*/
 }

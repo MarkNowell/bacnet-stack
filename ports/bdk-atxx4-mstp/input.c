@@ -163,6 +163,7 @@ bool input_button_value(
 void input_init(
     void)
 {
+#if 0		// I/O all configured in main.c
     /* configure the port pins for the switch */
     BIT_CLEAR(DDRA, DDA0);
     BIT_CLEAR(DDRA, DDA1);
@@ -189,6 +190,7 @@ void input_init(
     BIT_CLEAR(DDRB, DDB2);
     BIT_CLEAR(DDRB, DDB3);
     BIT_CLEAR(DDRB, DDB4);
+#endif
 #endif
     timer_interval_start(&Debounce_Timer, 30);
 }

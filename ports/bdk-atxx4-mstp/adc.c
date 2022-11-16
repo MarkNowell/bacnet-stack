@@ -21,6 +21,9 @@
 * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 *********************************************************************/
+
+#ifndef MN_CLIENT
+
 #include <stdbool.h>
 #include <stdint.h>
 #include "hardware.h"
@@ -48,7 +51,6 @@
 #endif
 
 /* Array of ADC results */
-#define ADC_CHANNELS_MAX 8
 static volatile uint16_t Sample_Result[ADC_CHANNELS_MAX];
 static volatile uint8_t Enabled_Channels;
 
@@ -168,4 +170,7 @@ void adc_init(
      */
     ADCSRB = (0 << ADTS2) | (0 << ADTS1) | (0 << ADTS0);
     power_adc_enable();
+		Enabled_Channels = 0 ;
 }
+
+#endif	// MN_CLIENT

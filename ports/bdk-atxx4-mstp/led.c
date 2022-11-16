@@ -41,29 +41,13 @@ void led_on(
     uint8_t index)
 {
     switch (index) {
-        case 0:
-            BIT_SET(PORTD, PD7);
-            break;
-        case 1:
-            BIT_SET(PORTD, PD6);
-            break;
-        case 2:
-#if (BDK_VERSION==4)
-            BIT_SET(PORTB, PB0);
-#else
-            BIT_SET(PORTC, PC7);
-#endif
-            break;
-        case 3:
-#if (BDK_VERSION==4)
-            BIT_SET(PORTB, PB4);
-#else
-            BIT_SET(PORTC, PC6);
-#endif
-            break;
-        default:
-            break;
-    }
+    case 0: BIT_LED0 = 0 ; break ;
+    case 1: BIT_LED1 = 0 ; break ;
+    case 2: BIT_LED2 = 0 ; break ;
+    case 3: BIT_LED3 = 0 ; break ;
+    default:
+      break;
+    } ;
     if (index < MAX_LEDS) {
         timer_interval_no_expire(&Off_Delay_Timer[index]);
     }
@@ -78,29 +62,13 @@ void led_off(
     uint8_t index)
 {
     switch (index) {
-        case 0:
-            BIT_CLEAR(PORTD, PD7);
-            break;
-        case 1:
-            BIT_CLEAR(PORTD, PD6);
-            break;
-        case 2:
-#if (BDK_VERSION==4)
-            BIT_CLEAR(PORTB, PB0);
-#else
-            BIT_CLEAR(PORTC, PC7);
-#endif
-            break;
-        case 3:
-#if (BDK_VERSION==4)
-            BIT_CLEAR(PORTB, PB4);
-#else
-            BIT_CLEAR(PORTC, PC6);
-#endif
-            break;
-        default:
-            break;
-    }
+    case 0: BIT_LED0 = 1 ; break ;
+    case 1: BIT_LED1 = 1 ; break ;
+    case 2: BIT_LED2 = 1 ; break ;
+    case 3: BIT_LED3 = 1 ; break ;
+    default:
+      break;
+    } ;
     if (index < MAX_LEDS) {
         timer_interval_no_expire(&Off_Delay_Timer[index]);
     }
@@ -115,22 +83,10 @@ bool led_state(
     uint8_t index)
 {
     switch (index) {
-        case 0:
-            return (BIT_CHECK(PIND, PIND7));
-        case 1:
-            return (BIT_CHECK(PIND, PIND6));
-        case 2:
-#if (BDK_VERSION==4)
-            return (BIT_CHECK(PINB, PINC0));
-#else
-            return (BIT_CHECK(PINC, PINC7));
-#endif
-        case 3:
-#if (BDK_VERSION==4)
-            return (BIT_CHECK(PINB, PINC4));
-#else
-            return (BIT_CHECK(PINC, PINC6));
-#endif
+        case 0: return !IN_LED0 ;
+        case 1: return !IN_LED1 ;
+        case 2: return !IN_LED2 ;
+        case 3: return !IN_LED3 ;
         default:
             break;
     }
@@ -210,7 +166,7 @@ void led_init(
 {
     uint8_t i;  /* loop counter */
 
-    /* configure the port pins as outputs */
+    /* configure the port pins as outputs -- all done in main.c
     BIT_SET(DDRD, DDD7);
     BIT_SET(DDRD, DDD6);
 #if (BDK_VERSION==4)
@@ -219,7 +175,7 @@ void led_init(
 #else
     BIT_SET(DDRC, DDC7);
     BIT_SET(DDRC, DDC6);
-#endif
+#endif */
     for (i = 0; i < MAX_LEDS; i++) {
         led_on_interval(i, 500);
     }

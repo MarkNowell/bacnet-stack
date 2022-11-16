@@ -29,7 +29,11 @@
 #include "serial.h"
 
 /* baud rate */
-static uint32_t Baud_Rate = 9600;
+static uint32_t Baud_Rate = BAUD_SERIAL_DEFAULT ;
+
+/* utility serial buffer */
+char serBuf[MAX_SERBUF] ;
+uint16_t serLen ;
 
 /* buffer for storing received bytes - size must be power of two */
 static uint8_t Receive_Buffer_Data[128];
@@ -38,16 +42,16 @@ static FIFO_BUFFER Receive_Buffer;
 static void serial_receiver_enable(
     void)
 {
-    UCSR1B = _BV(TXEN1) | _BV(RXEN1) | _BV(RXCIE1);
+    UCSR0B = _BV(TXEN0) | _BV(RXEN0) | _BV(RXCIE0);
 }
 
-ISR(USART1_RX_vect)
+ISR(USART0_RX_vect)
 {
     uint8_t data_byte;
 
-    if (BIT_CHECK(UCSR1A, RXC1)) {
+    if (BIT_CHECK(UCSR0A, RXC0)) {
         /* data is available */
-        data_byte = UDR1;
+        data_byte = UDR0;
         (void) FIFO_Put(&Receive_Buffer, data_byte);
     }
 }
@@ -82,25 +86,25 @@ void serial_bytes_send(
     uint8_t * buffer,   /* data to send */
     uint16_t nbytes)
 {       /* number of bytes of data */
-    while (!BIT_CHECK(UCSR1A, UDRE1)) {
+    while (!BIT_CHECK(UCSR0A, UDRE0)) {
         /* do nothing - wait until Tx buffer is empty */
     }
     while (nbytes) {
         /* Send the data byte */
-        UDR1 = *buffer;
-        while (!BIT_CHECK(UCSR1A, UDRE1)) {
+        UDR0 = *buffer;
+        while (!BIT_CHECK(UCSR0A, UDRE0)) {
             /* do nothing - wait until Tx buffer is empty */
         }
         buffer++;
         nbytes--;
     }
     /* was the frame sent? */
-    while (!BIT_CHECK(UCSR1A, TXC1)) {
+    while (!BIT_CHECK(UCSR0A, TXC0)) {
         /* do nothing - wait until the entire frame in the
            Transmit Shift Register has been shifted out */
     }
     /* Clear the Transmit Complete flag by writing a one to it. */
-    BIT_SET(UCSR1A, TXC1);
+    BIT_SET(UCSR0A, TXC0);
 
     return;
 }
@@ -108,11 +112,11 @@ void serial_bytes_send(
 void serial_byte_send(
     uint8_t ch)
 {
-    while (!BIT_CHECK(UCSR1A, UDRE1)) {
+    while (!BIT_CHECK(UCSR0A, UDRE0)) {
         /* do nothing - wait until Tx buffer is empty */
     }
     /* Send the data byte */
-    UDR1 = ch;
+    UDR0 = ch;
 
     return;
 }
@@ -121,12 +125,12 @@ void serial_byte_transmit_complete(
     void)
 {
     /* was the frame sent? */
-    while (!BIT_CHECK(UCSR1A, TXC1)) {
+    while (!BIT_CHECK(UCSR0A, TXC0)) {
         /* do nothing - wait until the entire frame in the
            Transmit Shift Register has been shifted out */
     }
     /* Clear the Transmit Complete flag by writing a one to it. */
-    BIT_SET(UCSR1A, TXC1);
+    BIT_SET(UCSR0A, TXC0);
 }
 
 uint32_t serial_baud_rate(
@@ -149,9 +153,9 @@ bool serial_baud_rate_set(
         case 115200:
             Baud_Rate = baud;
             /* 2x speed mode */
-            BIT_SET(UCSR1A, U2X1);
+            BIT_SET(UCSR0A, U2X0);
             /* configure baud rate */
-            UBRR1 = (F_CPU / (8UL * Baud_Rate)) - 1;
+            UBRR0 = (F_CPU / (8UL * Baud_Rate)) - 1;
             /* FIXME: store the baud rate */
             break;
         default:
@@ -165,11 +169,11 @@ bool serial_baud_rate_set(
 static void serial_usart_init(
     void)
 {
-    /* enable the internal pullup on RXD1 */
+    /* enable the internal pullup on RXD0 -- all I/O setup in main.c
     BIT_CLEAR(DDRD, DDD2);
-    BIT_SET(PORTD, PD2);
+    BIT_SET(PORTD, PD2); */
     /* enable Transmit and Receive */
-    UCSR1B = _BV(TXEN1) | _BV(RXEN1);
+    UCSR0B = _BV(TXEN0) | _BV(RXEN0);
     /* Set USART Control and Status Register n C */
     /* Asynchronous USART 8-bit data, No parity, 1 stop */
     /* Set USART Mode Select: UMSELn1 UMSELn0 = 00 for Asynchronous USART */
@@ -177,8 +181,8 @@ static void serial_usart_init(
     /* Set Stop Bit Select: USBSn = 0 for 1 stop bit */
     /* Set Character Size: UCSZn2 UCSZn1 UCSZn0 = 011 for 8-bit */
     /* Clock Polarity: UCPOLn = 0 when asynchronous mode is used. */
-    UCSR1C = _BV(UCSZ11) | _BV(UCSZ10);
-    power_usart1_enable();
+    UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);
+    power_usart0_enable();
 }
 
 void serial_init(

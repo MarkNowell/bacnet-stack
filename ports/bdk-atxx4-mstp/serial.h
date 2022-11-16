@@ -56,4 +56,10 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+/* utility serial buffer */
+#define MAX_SERBUF	80
+extern char serBuf[MAX_SERBUF] ;
+extern uint16_t serLen ;
+
 #endif

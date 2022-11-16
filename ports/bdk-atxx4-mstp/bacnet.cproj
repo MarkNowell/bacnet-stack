@@ -2,354 +2,599 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectVersion>6.1</ProjectVersion>
+    <ProjectVersion>7.0</ProjectVersion>
     <ToolchainName>com.Atmel.AVRGCC8.C</ToolchainName>
-    <ProjectGuid>{1cefd571-4b50-48fd-b75e-0e968ebbd698}</ProjectGuid>
-    <avrdevice>ATmega644P</avrdevice>
+    <ProjectGuid>ead6bc6a-ba85-41e1-9b33-60342a2ab352</ProjectGuid>
+    <Name>bacnet</Name>
+    <avrdevice>atmega2560</avrdevice>
     <avrdeviceseries>none</avrdeviceseries>
+    <AvrProjectType>Importer</AvrProjectType>
     <OutputType>Executable</OutputType>
     <Language>C</Language>
-    <OutputFileName>$(MSBuildProjectName)</OutputFileName>
+    <OutputFileName>bac-client</OutputFileName>
     <OutputFileExtension>.elf</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
-    <AssemblyName>BACnet Development Kit</AssemblyName>
-    <Name>BACnet Development Kit</Name>
-    <RootNamespace>BACnet Development Kit</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
+    <avrtool>com.atmel.avrdbg.tool.atmelice</avrtool>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
-    <OverrideVtorValue />
-    <eraseonlaunchrule>0</eraseonlaunchrule>
+    <CacheFlash>true</CacheFlash>
     <ProgFlashFromRam>true</ProgFlashFromRam>
     <RamSnippetAddress>0x20000000</RamSnippetAddress>
-    <CacheFlash>true</CacheFlash>
     <UncachedRange />
+    <preserveEEPROM>false</preserveEEPROM>
+    <OverrideVtorValue>exception_table</OverrideVtorValue>
     <BootSegment>2</BootSegment>
+    <eraseonlaunchrule>0</eraseonlaunchrule>
     <AsfFrameworkConfig>
-      <framework-data xmlns="">
-        <options />
-        <configurations />
-        <files />
-        <documentation help="" />
-        <offline-documentation help="" />
-        <dependencies>
-          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.8.1" />
-        </dependencies>
-      </framework-data>
+      <framework-data>
+  <options />
+  <configurations />
+  <files />
+  <documentation help="" />
+  <offline-documentation help="" />
+  <dependencies>
+    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.42.0" />
+  </dependencies>
+</framework-data>
     </AsfFrameworkConfig>
+    <avrtoolserialnumber>J41800056820</avrtoolserialnumber>
+    <avrdeviceexpectedsignature>0x1E9801</avrdeviceexpectedsignature>
+    <com_atmel_avrdbg_tool_jtagicemkii>
+      <ToolOptions>
+        <InterfaceProperties>
+          <JtagDbgClock>0</JtagDbgClock>
+        </InterfaceProperties>
+        <InterfaceName>JTAG</InterfaceName>
+      </ToolOptions>
+      <ToolType>com.atmel.avrdbg.tool.jtagicemkii</ToolType>
+      <ToolNumber>00B0000037F3</ToolNumber>
+      <ToolName>JTAGICE mkII</ToolName>
+    </com_atmel_avrdbg_tool_jtagicemkii>
+    <avrtoolinterface>JTAG</avrtoolinterface>
+    <avrtoolinterfaceclock>200000</avrtoolinterfaceclock>
+    <com_atmel_avrdbg_tool_atmelice>
+      <ToolOptions>
+        <InterfaceProperties>
+          <JtagDbgClock>200000</JtagDbgClock>
+          <IspClock>125000</IspClock>
+        </InterfaceProperties>
+        <InterfaceName>JTAG</InterfaceName>
+      </ToolOptions>
+      <ToolType>com.atmel.avrdbg.tool.atmelice</ToolType>
+      <ToolNumber>J41800056820</ToolNumber>
+      <ToolName>Atmel-ICE</ToolName>
+    </com_atmel_avrdbg_tool_atmelice>
+    <ResetRule>0</ResetRule>
+    <EraseKey />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'default' ">
+    <OutputPath>bin\default\</OutputPath>
     <ToolchainSettings>
       <AvrGcc>
-  <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
-  <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
-  <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
-  <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
-  <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
-  <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
-  <avrgcc.compiler.symbols.DefSymbols><ListValues>
-  <Value>BACDL_MSTP</Value>
-  <Value>MAX_APDU=128</Value>
-  <Value>BIG_ENDIAN=0</Value>
-  <Value>MAX_TSM_TRANSACTIONS=0</Value>
-  <Value>MSTP_PDU_PACKET_COUNT=2</Value>
-  <Value>MAX_CHARACTER_STRING_BYTES=64</Value>
-  <Value>MAX_OCTET_STRING_BYTES=64</Value>
-  <Value>NDEBUG</Value>
-</ListValues></avrgcc.compiler.symbols.DefSymbols>
-  <avrgcc.compiler.directories.IncludePaths><ListValues>
-  <Value>..</Value>
-  <Value>../../../demo/object</Value>
-  <Value>../../../include</Value>
-  <Value>../../../ports/bdk-atxx4-mstp</Value>
-</ListValues></avrgcc.compiler.directories.IncludePaths>
-  <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
-  <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
-  <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
-  <avrgcc.linker.libraries.Libraries><ListValues><Value>libm</Value></ListValues></avrgcc.linker.libraries.Libraries>
-  <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
-</AvrGcc>
+        <avrgcc.common.Device>-mmcu=atmega2560 -B "%24(PackRepoDir)\atmel\ATmega_DFP\1.0.90\gcc\dev\atmega2560"</avrgcc.common.Device>
+        <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
+        <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
+        <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
+        <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
+        <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
+        <avrgcc.compiler.general.SubroutinesFunctionPrologues>true</avrgcc.compiler.general.SubroutinesFunctionPrologues>
+        <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>true</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
+        <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>true</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
+        <avrgcc.compiler.symbols.DefSymbols>
+          <ListValues>
+            <Value>BACDL_MSTP</Value>
+            <Value>MAX_APDU=128</Value>
+            <Value>BIG_ENDIAN=0</Value>
+            <Value>BACAPP_BOOLEAN</Value>
+            <Value>BACAPP_REAL</Value>
+            <Value>BACAPP_OBJECT_ID</Value>
+            <Value>BACAPP_UNSIGNED</Value>
+            <Value>BACAPP_ENUMERATED</Value>
+            <Value>BACAPP_CHARACTER_STRING</Value>
+            <Value>WRITE_PROPERTY</Value>
+            <Value>MSTP_PDU_PACKET_COUNT=2</Value>
+            <Value>MAX_CHARACTER_STRING_BYTES=64</Value>
+            <Value>MAX_OCTET_STRING_BYTES=64</Value>
+            <Value>MN_CLIENT</Value>
+            <Value>MN_NOADDRCACHE</Value>
+            <Value>MAX_TSM_TRANSACTIONS=5</Value>
+            <Value>NDEBUG=1</Value>
+            <Value>F_CPU=16000000UL</Value>
+          </ListValues>
+        </avrgcc.compiler.symbols.DefSymbols>
+        <avrgcc.compiler.directories.IncludePaths>
+          <ListValues>
+            <Value>..\.</Value>
+            <Value>..\..\..\include</Value>
+            <Value>..\..\..\demo\handler</Value>
+            <Value>..\..\..\demo\object</Value>
+            <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.0.90\include</Value>
+          </ListValues>
+        </avrgcc.compiler.directories.IncludePaths>
+        <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
+        <avrgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>true</avrgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
+        <avrgcc.compiler.optimization.PackStructureMembers>true</avrgcc.compiler.optimization.PackStructureMembers>
+        <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>true</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
+        <avrgcc.compiler.warnings.AllWarnings>true</avrgcc.compiler.warnings.AllWarnings>
+        <avrgcc.compiler.miscellaneous.OtherFlags>-gdwarf-2 -std=gnu99 -finline-functions-called-once -fdata-sections -Wstrict-prototypes -Wmissing-prototypes -g</avrgcc.compiler.miscellaneous.OtherFlags>
+        <avrgcc.linker.miscellaneous.LinkerFlags>-Wl,--gc-sections,-static</avrgcc.linker.miscellaneous.LinkerFlags>
+        <avrgcc.assembler.general.AssemblerFlags>-Wall -gdwarf-2 -std=gnu99 -mcall-prologues -finline-functions-called-once -ffunction-sections -fdata-sections -Wstrict-prototypes -Wmissing-prototypes -DBACDL_MSTP -DMAX_APDU=128 -DBIG_ENDIAN=0 -DBACAPP_BOOLEAN -DBACAPP_REAL -DBACAPP_OBJECT_ID -DBACAPP_UNSIGNED -DBACAPP_ENUMERATED -DBACAPP_CHARACTER_STRING -DWRITE_PROPERTY -g -DMSTP_PDU_PACKET_COUNT=2 -DMAX_CHARACTER_STRING_BYTES=64 -DMAX_OCTET_STRING_BYTES=64 -DMN_CLIENT -DMN_NOADDRCACHE   -DMAX_TSM_TRANSACTIONS=5      -DNDEBUG=1  -DF_CPU=16000000UL -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -Wall -gdwarf-2 -std=gnu99 -mcall-prologues -finline-functions-called-once -ffunction-sections -fdata-sections -Wstrict-prototypes -Wmissing-prototypes -DBACDL_MSTP -DMAX_APDU=128 -DBIG_ENDIAN=0 -DBACAPP_BOOLEAN -DBACAPP_REAL -DBACAPP_OBJECT_ID -DBACAPP_UNSIGNED -DBACAPP_ENUMERATED -DBACAPP_CHARACTER_STRING -DWRITE_PROPERTY -g -DMSTP_PDU_PACKET_COUNT=2 -DMAX_CHARACTER_STRING_BYTES=64 -DMAX_OCTET_STRING_BYTES=64 -DMN_CLIENT -DMN_NOADDRCACHE   -DMAX_TSM_TRANSACTIONS=5      -DNDEBUG=1  -DF_CPU=16000000UL -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums</avrgcc.assembler.general.AssemblerFlags>
+        <avrgcc.assembler.general.IncludePaths>
+          <ListValues>
+            <Value>..\.</Value>
+            <Value>..\..\..\include</Value>
+            <Value>..\..\..\demo\handler</Value>
+            <Value>..\..\..\demo\object</Value>
+          </ListValues>
+        </avrgcc.assembler.general.IncludePaths>
+      </AvrGcc>
     </ToolchainSettings>
-    <UsesExternalMakeFile>False</UsesExternalMakeFile>
     <BuildTarget>all</BuildTarget>
     <CleanTarget>clean</CleanTarget>
-    <ExternalMakeFilePath>D:\code\bacnet-stack\ports\bdk-atxx4-mstp\Makefile</ExternalMakeFilePath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <ToolchainSettings>
-      <AvrGcc>
-  <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
-  <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
-  <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
-  <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
-  <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
-  <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
-  <avrgcc.compiler.symbols.DefSymbols><ListValues>
-  <Value>BACDL_MSTP</Value>
-  <Value>MAX_APDU=128</Value>
-  <Value>BIG_ENDIAN=0</Value>
-  <Value>MAX_TSM_TRANSACTIONS=0</Value>
-  <Value>MSTP_PDU_PACKET_COUNT=2</Value>
-  <Value>MAX_CHARACTER_STRING_BYTES=64</Value>
-  <Value>MAX_OCTET_STRING_BYTES=64</Value>
-  <Value>DEBUG</Value>
-</ListValues></avrgcc.compiler.symbols.DefSymbols>
-  <avrgcc.compiler.directories.IncludePaths><ListValues><Value>..</Value><Value>../../../demo/object</Value><Value>../../../include</Value></ListValues></avrgcc.compiler.directories.IncludePaths>
-  <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
-  <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
-  <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
-  <avrgcc.linker.libraries.Libraries><ListValues><Value>libm</Value></ListValues></avrgcc.linker.libraries.Libraries>
-  <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
-  <avrgcc.compiler.optimization.DebugLevel>Default (-g2)</avrgcc.compiler.optimization.DebugLevel>
-  <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>
-</AvrGcc>
-    </ToolchainSettings>
-    <UsesExternalMakeFile>False</UsesExternalMakeFile>
-    <BuildTarget>all</BuildTarget>
-    <CleanTarget>clean</CleanTarget>
-    <ExternalMakeFilePath>D:\code\bacnet-stack\ports\bdk-atxx4-mstp\Makefile</ExternalMakeFilePath>
-  </PropertyGroup>
+  <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
   <ItemGroup>
-    <Compile Include="..\..\demo\handler\h_dcc.c">
+    <Compile Include="timer.h">
       <SubType>compile</SubType>
-      <Link>BACnet Handlers\h_dcc.c</Link>
     </Compile>
-    <Compile Include="..\..\demo\handler\h_npdu.c">
+    <Compile Include="eeprom.h">
       <SubType>compile</SubType>
-      <Link>BACnet Handlers\h_npdu.c</Link>
     </Compile>
-    <Compile Include="..\..\demo\handler\h_rd.c">
+    <Compile Include="hardware.h">
       <SubType>compile</SubType>
-      <Link>BACnet Handlers\h_rd.c</Link>
     </Compile>
-    <Compile Include="..\..\demo\handler\h_rp.c">
+    <Compile Include="iar2gcc.h">
       <SubType>compile</SubType>
-      <Link>BACnet Handlers\h_rp.c</Link>
     </Compile>
-    <Compile Include="..\..\demo\handler\h_rpm.c">
+    <Compile Include="init.h">
       <SubType>compile</SubType>
-      <Link>BACnet Handlers\h_rpm.c</Link>
     </Compile>
-    <Compile Include="..\..\demo\handler\h_whohas.c">
+    <Compile Include="input.h">
       <SubType>compile</SubType>
-      <Link>BACnet Handlers\h_whohas.c</Link>
     </Compile>
-    <Compile Include="..\..\demo\handler\h_whois.c">
+    <Compile Include="led.h">
       <SubType>compile</SubType>
-      <Link>BACnet Handlers\h_whois.c</Link>
     </Compile>
-    <Compile Include="..\..\demo\handler\h_wp.c">
+    <Compile Include="nvdata.h">
       <SubType>compile</SubType>
-      <Link>BACnet Handlers\h_wp.c</Link>
     </Compile>
-    <Compile Include="..\..\demo\handler\noserv.c">
+    <Compile Include="rs485.h">
       <SubType>compile</SubType>
-      <Link>BACnet Handlers\noserv.c</Link>
     </Compile>
-    <Compile Include="..\..\demo\handler\s_iam.c">
+    <Compile Include="seeprom.h">
       <SubType>compile</SubType>
-      <Link>BACnet Handlers\s_iam.c</Link>
     </Compile>
-    <Compile Include="..\..\demo\handler\s_ihave.c">
+    <Compile Include="serial.h">
       <SubType>compile</SubType>
-      <Link>BACnet Handlers\s_ihave.c</Link>
     </Compile>
-    <Compile Include="..\..\demo\handler\txbuf.c">
+    <Compile Include="watchdog.h">
       <SubType>compile</SubType>
-      <Link>BACnet Handlers\txbuf.c</Link>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\adc.c">
+    <Compile Include="adc.h">
       <SubType>compile</SubType>
-      <Link>adc.c</Link>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\ai.c">
+    <Compile Include="bacnet.h">
       <SubType>compile</SubType>
-      <Link>ai.c</Link>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\av.c">
+    <Compile Include="stack.h">
       <SubType>compile</SubType>
-      <Link>av.c</Link>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\bacnet.c">
+    <Compile Include="test.h">
       <SubType>compile</SubType>
-      <Link>bacnet.c</Link>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\bi.c">
+    <Compile Include="mn_defs.h">
       <SubType>compile</SubType>
-      <Link>bi.c</Link>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\bname.c">
+    <Compile Include="..\..\include\client.h">
       <SubType>compile</SubType>
-      <Link>bname.c</Link>
+      <Link>client.h</Link>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\bo.c">
+    <Compile Include="..\..\include\tsm.h">
       <SubType>compile</SubType>
-      <Link>bo.c</Link>
+      <Link>tsm.h</Link>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\device.c">
+    <Compile Include="..\..\include\config.h">
       <SubType>compile</SubType>
-      <Link>device.c</Link>
+      <Link>config.h</Link>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\dlmstp.c">
+    <Compile Include="..\..\include\dlmstp.h">
       <SubType>compile</SubType>
-      <Link>dlmstp.c</Link>
+      <Link>dlmstp.h</Link>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\eeprom.c">
+    <Compile Include="..\..\include\datalink.h">
       <SubType>compile</SubType>
-      <Link>eeprom.c</Link>
+      <Link>datalink.h</Link>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\fuses.c">
+    <Folder Include="dtl" />
+    <Compile Include="dtl\asms.h">
       <SubType>compile</SubType>
-      <Link>fuses.c</Link>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\init.c">
+    <Compile Include="dtl\LAN.H">
       <SubType>compile</SubType>
-      <Link>init.c</Link>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\input.c">
+    <Compile Include="dtl\SlanLAN1.h">
       <SubType>compile</SubType>
-      <Link>input.c</Link>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\led.c">
+    <Compile Include="dtl\lan.c">
       <SubType>compile</SubType>
-      <Link>led.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\main.c">
+    <Compile Include="dtl\lant.c">
       <SubType>compile</SubType>
-      <Link>main.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\rs485.c">
+    <Compile Include="dtl\SlanLAN1.c">
       <SubType>compile</SubType>
-      <Link>rs485.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\seeprom.c">
+    <Compile Include="dtl\client.c">
       <SubType>compile</SubType>
-      <Link>seeprom.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\serial.c">
+    <Compile Include="..\..\include\apdu.h">
       <SubType>compile</SubType>
-      <Link>serial.c</Link>
+      <Link>apdu.h</Link>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\stack.c">
+    <Compile Include="main.c">
       <SubType>compile</SubType>
-      <Link>stack.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\test.c">
+    <Compile Include="timer2.c">
       <SubType>compile</SubType>
-      <Link>test.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\timer.c">
+    <Compile Include="eeprom.c">
       <SubType>compile</SubType>
-      <Link>timer.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\timer2.c">
+    <Compile Include="init.c">
       <SubType>compile</SubType>
-      <Link>timer2.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\ports\bdk-atxx4-mstp\watchdog.c">
+    <Compile Include="input.c">
       <SubType>compile</SubType>
-      <Link>watchdog.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\src\abort.c">
+    <Compile Include="led.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\abort.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\src\apdu.c">
+    <Compile Include="rs485.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\apdu.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\src\bacaddr.c">
+    <Compile Include="seeprom.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\bacaddr.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\src\bacapp.c">
+    <Compile Include="serial.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\bacapp.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\src\bacdcode.c">
+    <Compile Include="stack.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\bacdcode.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\src\bacerror.c">
+    <Compile Include="dlmstp.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\bacerror.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\src\bacint.c">
+    <Compile Include="bo.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\bacint.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\src\bacreal.c">
+    <Compile Include="bi.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\bacreal.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\src\bacstr.c">
+    <Compile Include="ai.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\bacstr.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\src\crc.c">
+    <Compile Include="device.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\crc.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\src\dcc.c">
+    <Compile Include="watchdog.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\dcc.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\src\fifo.c">
+    <Compile Include="adc.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\fifo.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\src\iam.c">
+    <Compile Include="bacnet.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\iam.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\src\ihave.c">
+    <Compile Include="fuses.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\ihave.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\src\memcopy.c">
+    <Compile Include="test.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\memcopy.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
-    <Compile Include="..\..\src\npdu.c">
+    <Compile Include="timer.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\npdu.c</Link>
-    </Compile>
-    <Compile Include="..\..\src\rd.c">
-      <SubType>compile</SubType>
-      <Link>BACnet Core\rd.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
     <Compile Include="..\..\src\reject.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\reject.c</Link>
+      <Link>reject.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
     <Compile Include="..\..\src\ringbuf.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\ringbuf.c</Link>
+      <Link>ringbuf.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
     <Compile Include="..\..\src\rp.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\rp.c</Link>
+      <Link>rp.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
     <Compile Include="..\..\src\rpm.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\rpm.c</Link>
+      <Link>rpm.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
     <Compile Include="..\..\src\whohas.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\whohas.c</Link>
+      <Link>whohas.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
     <Compile Include="..\..\src\whois.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\whois.c</Link>
+      <Link>whois.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
     <Compile Include="..\..\src\wp.c">
       <SubType>compile</SubType>
-      <Link>BACnet Core\wp.c</Link>
+      <Link>wp.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\abort.c">
+      <SubType>compile</SubType>
+      <Link>abort.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\apdu.c">
+      <SubType>compile</SubType>
+      <Link>apdu.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\bacaddr.c">
+      <SubType>compile</SubType>
+      <Link>bacaddr.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\bacapp.c">
+      <SubType>compile</SubType>
+      <Link>bacapp.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\bacdcode.c">
+      <SubType>compile</SubType>
+      <Link>bacdcode.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\bacerror.c">
+      <SubType>compile</SubType>
+      <Link>bacerror.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\bacint.c">
+      <SubType>compile</SubType>
+      <Link>bacint.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\bacreal.c">
+      <SubType>compile</SubType>
+      <Link>bacreal.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\bacstr.c">
+      <SubType>compile</SubType>
+      <Link>bacstr.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\crc.c">
+      <SubType>compile</SubType>
+      <Link>crc.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\dcc.c">
+      <SubType>compile</SubType>
+      <Link>dcc.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\fifo.c">
+      <SubType>compile</SubType>
+      <Link>fifo.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\iam.c">
+      <SubType>compile</SubType>
+      <Link>iam.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\ihave.c">
+      <SubType>compile</SubType>
+      <Link>ihave.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\npdu.c">
+      <SubType>compile</SubType>
+      <Link>npdu.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\rd.c">
+      <SubType>compile</SubType>
+      <Link>rd.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\memcopy.c">
+      <SubType>compile</SubType>
+      <Link>memcopy.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\demo\handler\h_dcc.c">
+      <SubType>compile</SubType>
+      <Link>h_dcc.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\demo\handler\h_npdu.c">
+      <SubType>compile</SubType>
+      <Link>h_npdu.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\demo\handler\h_rd.c">
+      <SubType>compile</SubType>
+      <Link>h_rd.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\demo\handler\h_rp.c">
+      <SubType>compile</SubType>
+      <Link>h_rp.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\demo\handler\h_rpm.c">
+      <SubType>compile</SubType>
+      <Link>h_rpm.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\demo\handler\h_whohas.c">
+      <SubType>compile</SubType>
+      <Link>h_whohas.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\demo\handler\h_whois.c">
+      <SubType>compile</SubType>
+      <Link>h_whois.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\demo\handler\h_wp.c">
+      <SubType>compile</SubType>
+      <Link>h_wp.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\demo\handler\noserv.c">
+      <SubType>compile</SubType>
+      <Link>noserv.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\demo\handler\s_iam.c">
+      <SubType>compile</SubType>
+      <Link>s_iam.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\demo\handler\s_ihave.c">
+      <SubType>compile</SubType>
+      <Link>s_ihave.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\demo\handler\txbuf.c">
+      <SubType>compile</SubType>
+      <Link>txbuf.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="bname.c">
+      <SubType>compile</SubType>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\demo\handler\s_rp.c">
+      <SubType>compile</SubType>
+      <Link>s_rp.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\demo\handler\s_wp.c">
+      <SubType>compile</SubType>
+      <Link>s_wp.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\tsm.c">
+      <SubType>compile</SubType>
+      <Link>tsm.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\src\address.c">
+      <SubType>compile</SubType>
+      <Link>address.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
+    </Compile>
+    <Compile Include="..\..\demo\handler\h_rp_a.c">
+      <SubType>compile</SubType>
+      <Link>h_rp_a.c</Link>
+      <CustomCompilationSetting Condition="'$(Configuration)' == 'default'">
+      </CustomCompilationSetting>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BACnet Handlers" />
-    <Folder Include="BACnet Core" />
-  </ItemGroup>
-  <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

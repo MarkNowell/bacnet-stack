@@ -35,6 +35,14 @@ extern "C" {
     void bacnet_task(
         void);
 
+	#ifdef MN_CLIENT
+		int ClientTask( void ) ; 
+		void ClientInit( void ) ;
+		void InitLanTask( void ) ;
+		void LanTask( void ) ;
+	#endif
+
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

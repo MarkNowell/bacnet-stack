@@ -40,6 +40,13 @@ extern "C" {
         uint8_t * buffer,       /* data to send */
         int nbytes);    /* number of bytes of data */
 
+
+		uint8_t ee_read_byte(uint16_t addr) ;
+		uint16_t ee_read_word(uint16_t addr) ;
+		void ee_write_byte(uint16_t addr, uint8_t val) ;
+		void ee_write_word(uint16_t addr, uint16_t val) ;
+		
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

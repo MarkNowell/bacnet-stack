@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include "hardware.h"
 #include "eeprom.h"
+// #include <avr\eeprom.h>
 
 /* Internal EEPROM of the AVR - http://supp.iar.com/Support/?note=45745 */
 
@@ -35,16 +36,9 @@ int eeprom_bytes_read(
     uint8_t * buf,      /* data to store */
     int len)
 {       /* number of bytes of data to read */
-    int count = 0;      /* return value */
-
-    while (len) {
-        __EEGET(buf[count], eeaddr);
-        count++;
-        eeaddr++;
-        len--;
-    }
-
-    return count;
+		eeaddr += EEPROM_INTERNAL_ADDR ;
+		eeprom_read_block(buf, (const void *) eeaddr, len) ;
+    return len ;
 }
 
 int eeprom_bytes_write(
@@ -52,14 +46,26 @@ int eeprom_bytes_write(
     uint8_t * buf,      /* data to send */
     int len)
 {       /* number of bytes of data */
-    int count = 0;
-
-    while (len) {
-        __EEPUT(eeaddr, buf[count]);
-        count++;
-        eeaddr++;
-        len--;
-    }
-
-    return count;
+		eeaddr += EEPROM_INTERNAL_ADDR ;
+		eeprom_update_block(buf, (void *) eeaddr, len) ;
+    return len ;
 }
+
+uint8_t ee_read_byte(uint16_t addr) {
+	uint8_t b ;
+	eeprom_bytes_read(addr, &b, 1) ;
+	return b ;
+}
+uint16_t ee_read_word(uint16_t addr) {
+	uint16_t w ;
+	eeprom_bytes_read(addr, (uint8_t *) &w, 2) ;
+	return w ;
+}
+void ee_write_byte(uint16_t addr, uint8_t val) {
+	eeprom_bytes_write(addr, &val, 1) ;
+}
+void ee_write_word(uint16_t addr, uint16_t val) {
+	eeprom_bytes_write(addr, (uint8_t *) &val, 2) ;
+}
+
+

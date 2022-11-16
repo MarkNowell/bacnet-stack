@@ -30,6 +30,33 @@
 /* me */
 #include "seeprom.h"
 
+
+#ifdef SEEPROM_INTERNAL_ADDR		/* Use interal eeprom - no external serial I2C eeprom */
+
+void seeprom_init( void ) {}
+
+int seeprom_bytes_read(
+    uint16_t eeaddr,    /* EEPROM starting memory address (offset of zero) */
+    uint8_t * buf,      /* data to store */
+    int len)
+{       /* number of bytes of data to read */
+		eeaddr += SEEPROM_INTERNAL_ADDR ;
+		eeprom_read_block(buf, (const void *) eeaddr, len) ;
+    return len ;
+}
+
+int seeprom_bytes_write(
+    uint16_t eeaddr,    /* EEPROM starting memory address */
+    uint8_t * buf,      /* data to send */
+    int len)
+{       /* number of bytes of data */
+		eeaddr += SEEPROM_INTERNAL_ADDR ;
+		eeprom_update_block(buf, (void *) eeaddr, len) ;
+    return len ;
+}
+
+#else		/* use external serial I2C eeprom as seeprom */
+
 /* the SEEPROM chip select bits A2, A1, and A0 are grounded */
 /* control byte is 0xAx */
 #ifndef SEEPROM_I2C_ADDRESS
@@ -514,3 +541,5 @@ void seeprom_init(
     /* my address */
     TWAR = 0;
 }
+
+#endif

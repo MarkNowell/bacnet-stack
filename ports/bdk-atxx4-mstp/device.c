@@ -45,6 +45,7 @@
 #include "av.h"
 #include "bi.h"
 #include "bo.h"
+#include "msv.h"
 
 /* forward prototype */
 int Device_Read_Property_Local(
@@ -68,8 +69,9 @@ static struct my_object_functions {
     Device_Count, Device_Index_To_Instance,
             Device_Valid_Object_Instance_Number, Device_Object_Name,
             Device_Read_Property_Local, Device_Write_Property_Local,
-            Device_Property_Lists}, {
-    OBJECT_ANALOG_INPUT, Analog_Input_Init, Analog_Input_Count,
+            Device_Property_Lists}, 
+#ifndef MN_CLIENT
+		{ OBJECT_ANALOG_INPUT, Analog_Input_Init, Analog_Input_Count,
             Analog_Input_Index_To_Instance, Analog_Input_Valid_Instance,
             Analog_Input_Object_Name, Analog_Input_Read_Property, NULL,
             Analog_Input_Property_Lists}, {
@@ -85,7 +87,13 @@ static struct my_object_functions {
             Binary_Output_Index_To_Instance, Binary_Output_Valid_Instance,
             Binary_Output_Object_Name, Binary_Output_Read_Property,
             Binary_Output_Write_Property, Binary_Output_Property_Lists}, {
-    MAX_BACNET_OBJECT_TYPE, NULL, NULL, NULL, NULL, NULL, NULL, NULL}
+
+    OBJECT_MULTI_STATE_VALUE, Multistate_Value_Init, Multistate_Value_Count,
+            Multistate_Value_Index_To_Instance, Multistate_Value_Valid_Instance,
+            Multistate_Value_Object_Name, Multistate_Value_Read_Property,
+            Multistate_Value_Write_Property, Multistate_Value_Property_Lists}, 
+#endif
+		{ MAX_BACNET_OBJECT_TYPE, NULL, NULL, NULL, NULL, NULL, NULL, NULL}
 };
 
 /* note: you really only need to define variables for
@@ -154,6 +162,7 @@ static struct my_object_functions *Device_Objects_Find_Functions(
 
     return (NULL);
 }
+
 
 /* Encodes the property APDU and returns the length,
    or sets the error, and returns BACNET_STATUS_ERROR */

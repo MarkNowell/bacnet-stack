@@ -34,9 +34,10 @@
 #include "config.h"
 #include "ai.h"
 #include "handlers.h"
+#include "hardware.h"
 
 #ifndef MAX_ANALOG_INPUTS
-#define MAX_ANALOG_INPUTS 2
+#define MAX_ANALOG_INPUTS 	ADC_CHANNELS_MAX
 #endif
 
 static float Present_Value[MAX_ANALOG_INPUTS];

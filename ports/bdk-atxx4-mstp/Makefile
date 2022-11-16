@@ -7,6 +7,10 @@ ifeq (${MCU},atmega1284p)
 MCU = atmega1284p
 AVRDUDE_MCU = m1284p
 LINT_MCU = __AVR_ATmega1284p__
+else ifeq (${MCU},atmega2560)
+MCU = atmega2560
+AVRDUDE_MCU = m2560
+LINT_MCU = __AVR_ATmega2560__
 else
 MCU = atmega644p
 AVRDUDE_MCU = m644p

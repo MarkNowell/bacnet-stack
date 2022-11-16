@@ -65,6 +65,7 @@ int Encode_Property_APDU(
                     rp_data->array_index, error_class, error_code);
             }
             break;
+#if MAX_ANALOG_VALUES
         case OBJECT_ANALOG_VALUE:
             if (Analog_Value_Valid_Instance(rp_data->object_instance)) {
                 apdu_len =
@@ -73,6 +74,8 @@ int Encode_Property_APDU(
                     rp_data->array_index, error_class, error_code);
             }
             break;
+#endif
+#if MAX_BINARY_VALUES
         case OBJECT_BINARY_VALUE:
             if (Binary_Value_Valid_Instance(rp_data->object_instance)) {
                 apdu_len =
@@ -81,6 +84,7 @@ int Encode_Property_APDU(
                     rp_data->array_index, error_class, error_code);
             }
             break;
+#endif
         default:
             *error_class = ERROR_CLASS_OBJECT;
             *error_code = ERROR_CODE_UNKNOWN_OBJECT;

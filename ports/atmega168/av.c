@@ -91,6 +91,7 @@ char *Analog_Value_Name(
     return text_string;
 }
 
+#if 0
 /* return apdu len, or -1 on error */
 int Analog_Value_Encode_Property_APDU(
     uint8_t * apdu,
@@ -160,6 +161,7 @@ int Analog_Value_Encode_Property_APDU(
 
     return apdu_len;
 }
+#endif
 
 /* returns true if successful */
 bool Analog_Value_Write_Property(

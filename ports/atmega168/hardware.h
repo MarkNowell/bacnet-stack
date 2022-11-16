@@ -27,7 +27,7 @@
 
 #if !defined(F_CPU)
     /* The processor clock frequency */
-#define F_CPU 7372800UL
+#define F_CPU 16000000UL
 #endif
 
 #if defined(__IAR_SYSTEMS_ICC__) || defined(__IAR_SYSTEMS_ASM__)
@@ -40,15 +40,32 @@
 #include "iar2gcc.h"
 #include "avr035.h"
 
-#define LED_NPDU_INIT() BIT_SET(DDRD, DDD5)
-#define LED_NPDU_ON() BIT_CLEAR(PORTD, PD5)
-#define LED_NPDU_OFF() BIT_SET(PORTD, PD5)
-/* #define LED_NPDU PORTD_Bit5 */
-/* #define LED_NPDU_OFF() {LED_NPDU = false;} */
-/* #define LED_NPDU_ON() {LED_NPDU = true;} */
+#define PT_LED_NPDU			PORTC
+#define PN_LED_NPDU			PC2
+#define DD_LED_NPDU			DDRC
 
-#define LED_GREEN_INIT() BIT_SET(DDRD, DDD4)
-#define LED_GREEN_ON() BIT_CLEAR(PORTD, PD4)
-#define LED_GREEN_OFF() BIT_SET(PORTD, PD4)
+#define PT_LED_GREEN		PORTC
+#define PN_LED_GREEN		PC3
+#define DD_LED_GREEN		DDRC
+
+#define PT_LED_TX				PORTC
+#define PN_LED_TX				PC0
+#define DD_LED_TX				DDRC
+
+#define PT_LED_RX				PORTC
+#define PN_LED_RX				PC1
+#define DD_LED_RX				DDRC
+
+#define PT_485_DE				PORTD
+#define PN_485_DE				PD4
+#define DD_485_DE				DDRD
+
+#define LED_NPDU_INIT() 	BIT_SET(DD_LED_NPDU, PN_LED_NPDU)
+#define LED_NPDU_ON() 		BIT_CLEAR(PT_LED_NPDU, PN_LED_NPDU)
+#define LED_NPDU_OFF() 		BIT_SET(PT_LED_NPDU, PN_LED_NPDU)
+
+#define LED_GREEN_INIT() 	BIT_SET(DD_LED_GREEN, PN_LED_GREEN)
+#define LED_GREEN_ON() 		BIT_CLEAR(PT_LED_GREEN, PN_LED_GREEN)
+#define LED_GREEN_OFF() 	BIT_SET(PT_LED_GREEN, PN_LED_GREEN)
 
 #endif

@@ -428,6 +428,7 @@ bool Device_Write_Property(
                 *error_code = ERROR_CODE_INVALID_DATA_TYPE;
             }
             break;
+#ifdef BACAPP_CHARACTER_STRING
         case PROP_OBJECT_NAME:
             if (value.tag == BACNET_APPLICATION_TAG_CHARACTER_STRING) {
                 uint8_t encoding;
@@ -452,6 +453,7 @@ bool Device_Write_Property(
                 *error_code = ERROR_CODE_INVALID_DATA_TYPE;
             }
             break;
+#endif
         case 9600:
             if (value.tag == BACNET_APPLICATION_TAG_UNSIGNED_INT) {
                 if (value.type.Unsigned_Int > 115200) {

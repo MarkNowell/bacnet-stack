@@ -64,18 +64,20 @@ void RS485_Initialize(
     /* Set Stop Bit Select: USBSn = 0 for 1 stop bit */
     /* Set Character Size: UCSZn2 UCSZn1 UCSZn0 = 011 for 8-bit */
     /* Clock Polarity: UCPOLn = 0 when asynchronous mode is used. */
-    UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);
+    // UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);			// 1 stop bit
+		UCSR0C = _BV(USBS0) | _BV(UCSZ01) | _BV(UCSZ00);	// 2 stop bits
+
     /* Clear Power Reduction USART0 */
     BIT_CLEAR(PRR, PRUSART0);
     /* Use port PD2 for RTS - enable and disable of Transceiver Tx/Rx */
     /* Set port bit as Output - initially receiving */
-    BIT_CLEAR(PORTD, PD2);
-    BIT_SET(DDRD, DDD2);
+    BIT_CLEAR(PT_485_DE, PN_485_DE);
+    BIT_SET(DD_485_DE, PN_485_DE);
     /* Configure Transmit and Receive LEDs - initially off */
-    BIT_SET(PORTD, PD6);
-    BIT_SET(PORTD, PD7);
-    BIT_SET(DDRD, DDD6);
-    BIT_SET(DDRD, DDD7);
+    BIT_SET(PT_LED_TX, PN_LED_TX);
+    BIT_SET(PT_LED_RX, PN_LED_RX);
+    BIT_SET(DD_LED_TX, PN_LED_TX);
+    BIT_SET(DD_LED_RX, PN_LED_RX);
 
     return;
 }
@@ -135,9 +137,9 @@ void RS485_Transmitter_Enable(
     bool enable)
 {
     if (enable) {
-        BIT_SET(PORTD, PD2);
+        BIT_SET(PT_485_DE, PN_485_DE);
     } else {
-        BIT_CLEAR(PORTD, PD2);
+        BIT_CLEAR(PT_485_DE, PN_485_DE);
     }
 }
 
@@ -182,13 +184,13 @@ void RS485_LED_Timers(
     if (LED1_Off_Timer) {
         LED1_Off_Timer--;
         if (LED1_Off_Timer == 0) {
-            BIT_SET(PORTD, PD6);
+            BIT_SET(PT_LED_TX, PN_LED_TX);
         }
     }
     if (LED3_Off_Timer) {
         LED3_Off_Timer--;
         if (LED3_Off_Timer == 0) {
-            BIT_SET(PORTD, PD7);
+            BIT_SET(PT_LED_RX, PN_LED_RX);
         }
     }
 }
@@ -202,7 +204,7 @@ void RS485_LED_Timers(
 static void RS485_LED1_On(
     void)
 {
-    BIT_CLEAR(PORTD, PD6);
+    BIT_CLEAR(PT_LED_TX, PN_LED_TX);
     LED1_Off_Timer = 20;
 }
 
@@ -215,7 +217,7 @@ static void RS485_LED1_On(
 static void RS485_LED3_On(
     void)
 {
-    BIT_CLEAR(PORTD, PD7);
+    BIT_CLEAR(PT_LED_RX, PN_LED_RX);
     LED3_Off_Timer = 20;
 }
 

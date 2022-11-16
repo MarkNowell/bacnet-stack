@@ -123,8 +123,8 @@ static void input_switch_read(
     uint8_t value;
     static uint8_t old_value = 0;
 
-    value = BITMASK_CHECK(PINC, 0x0F);
-    value |= (BITMASK_CHECK(PINB, 0x07) << 4);
+    value = BITMASK_CHECK(PINC, 0xF0) >> 4 ;
+    // value |= (BITMASK_CHECK(PINB, 0x07) << 4);
     if (value != old_value) {
         old_value = value;
     } else {
@@ -148,8 +148,8 @@ int main(
 
     init();
 #if defined(BACDL_MSTP)
-    RS485_Set_Baud_Rate(38400);
-    dlmstp_set_max_master(127);
+    RS485_Set_Baud_Rate(9600);
+    dlmstp_set_max_master(20);
     dlmstp_set_max_info_frames(1);
 #endif
     datalink_init(NULL);

@@ -110,13 +110,24 @@ void UpdateTimers( void ) {
 	} ;
 }
 
+// UBRR values for 16MHz
+#define UBRR_4800		207	// error 0.2
+#define UBRR_9600		103	// error 0.2
+#define UBRR_14400	68	// error 0.6
+#define UBRR_19200	51	// error 0.2
+#define UBRR_28800	34	// error 0.8
+#define UBRR_38400	25	// error 0.2
+#define UBRR_57600	16	// error 2.1
+#define UBRR_76800	12	// error 0.2
+#define UBRR_115200	8		// error 3.7
+
 const char hello[] PROGMEM = "Hello BACnet!!\r\n" ;
 int bufp, bufdir ;
 
 void SptInit( void ) {
-	static const unsigned baud = 103 ;	// 9600 @ 16MHz
+	static const unsigned baud = UBRR_9600 ;	// 9600 @ 16MHz
 	/* Set baud rate */
-	UBRR0 = 25 ;		// Arduino uart on USART0?
+	UBRR0 = UBRR_115200 ;	// Arduino uart on USART0?
 	UBRR1 = baud ;		// BACnet on USART1
 	UBRR2 = baud ;		// Slan on USART2
 	UCSR0B = _BV(TXEN0) | _BV(RXEN0) ;	// enable Tx/Rx on 0

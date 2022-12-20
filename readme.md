@@ -9,6 +9,16 @@ This version of the bridge can be built using the AtmelStudio project:
 * ports\bdk-atxx4-mstp\bac-client.atsln
 
 As of 2022-11-15 the hardware configuration is the original hardware configuration for non-isolated 485 shield.
+As of 2022-12-18 New SMT Mega485x2 v0.2 has same pin config as original non-isolated board (so should be s/w compatible)
+
+Hardware Testing
+---
+Test program is an AS7 project:
+* ports\bdk-atxx4-mstp\bac2slan-hw\bac2slan-hw.cproj
+
+This test project uses the "Custom Programming Tool" combined with avrdude.bat in project folder to use Arduino/avrdude programming - see notes in avrdude.bat. **COM port will need to be set in avrdude.bat**
+
+---
 
 Program/test instructions for original board:
 * ports\bdk-atxx4-mstp\485 shield production test.ods

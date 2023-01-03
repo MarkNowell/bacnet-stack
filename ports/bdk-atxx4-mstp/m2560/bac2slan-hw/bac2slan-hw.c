@@ -24,6 +24,7 @@ typedef struct
 // #define BIT_LED2	 					((volatile io_reg*)_SFR_MEM_ADDR(PORTE))->bit3
 
 #define BDF(pt, pn)		(((volatile io_reg*)_SFR_MEM_ADDR(pt))->bit ## pn)
+#define BIT_LED0			BDF(PORTB,7)
 #define BIT_LED1			BDF(PORTB,5)
 #define BIT_LED2			BDF(PORTB,6)
 #define BIT_BAC_DE		BDF(PORTH,3)
@@ -124,21 +125,79 @@ void UpdateTimers( void ) {
 const char hello[] PROGMEM = "Hello BACnet!!\r\n" ;
 int bufp, bufdir ;
 
-void SptInit( void ) {
-	static const unsigned baud = UBRR_9600 ;	// 9600 @ 16MHz
-	/* Set baud rate */
-	UBRR0 = UBRR_115200 ;	// Arduino uart on USART0?
-	UBRR1 = baud ;		// BACnet on USART1
-	UBRR2 = baud ;		// Slan on USART2
-	UCSR0B = _BV(TXEN0) | _BV(RXEN0) ;	// enable Tx/Rx on 0
-	UCSR1B = _BV(TXEN1) | _BV(RXEN1) ;	// enable Tx/Rx on 1
-	UCSR2B = _BV(TXEN2) | _BV(RXEN2) ;	// enable Tx/Rx on 2
+#define SptEn(n, baud) 	{  UBRR ## n = baud ; UCSR ## n ## B = _BV(TXEN ## n) | _BV(RXEN ##n) ; }
+#define SptDis(n)				{ UCSR ## n ## B = 0 ; }
 
+void DbgEnable() { 	SptEn(0, UBRR_115200) ; }
+
+void SptInit( void ) {
+	SptEn(1, UBRR_9600) ;
+	SptEn(2, UBRR_9600) ;
 	bufdir = 1 ;
 	bufp = 0 ;
 }
+void SptStop() { SptDis(0) ; SptDis(1) ; }
 
-void SptUpdate( void ) {
+int Test0Init() ; int Test0Update() ; int Test0End() ;
+int Test1Init() ; int Test1Update() ; int Test1End() ;
+
+struct { int *init() ; int *update() ; int *deinit() ; } tests[] = {
+	{ Test0Init, Test0Update, Test0End },
+	{ Test1Init, Test1Update, Test1End }
+}
+#define NUM_TESTS		2
+
+// #define SetLED(pt, pn, on) { if (on) pt &= ~_BV(pn) ; else pt |= _BV(pn) ; }
+#define SetLED( bit, on ) { bit = on ? 0 : 1 ; }
+
+int main( void ) {
+	int8_t testn = 0, lasttest = -1 ;
+	InitIO() ;
+	InitTimers() ;
+	DbgInit() ;
+	BIT_LED1 = 0 ;
+	BIT_LED2 = 1 ;
+	while (1) {
+		if (bUCSR0A(rxc) && (ch = UDR0) >= '0' && ch <= '9') {
+			testn = ch - '0' ;
+			if (testn )
+		} ;
+		if (testn != lasttest) {
+			switch(testn) {
+			case 1: Test1Init() ; break ;
+
+			}
+		}
+		UpdateTimers() ;
+		SptUpdate() ;
+		// SetLED(PT_BAC_DE, PN_BAC_DE, rt.ledCycle & 0x04) ;		
+		// SetLED(PT_SLAN_DE, PN_SLAN_DE, rt.ledCycle & 0x08) ;		
+		lasttest = testn ;
+	}
+}
+
+//===========================================================================
+
+void Test0Init() {
+}
+void Test0End() {
+}
+void Test0Update( void ) {
+	SetLED(BIT_LED0, rt.ledCycle & 0x01) ;
+	SetLED(BIT_LED1, rt.ledCycle & 0x01) ;
+	SetLED(BIT_LED2, rt.ledCycle & 0x02) ;		
+}
+
+
+//===========================================================================
+
+void Test1Init() {
+	SptInit() ;
+}
+void Test1End() {
+	SptStop() ;
+}
+void Test1Update( void ) {
 	char ch ;
 	if (bufdir) {	// tx 1 => 2
 		BIT_BAC_DE = 1 ;
@@ -177,22 +236,3 @@ void SptUpdate( void ) {
 	} ;
 }
 
-// #define SetLED(pt, pn, on) { if (on) pt &= ~_BV(pn) ; else pt |= _BV(pn) ; }
-#define SetLED( bit, on ) { bit = on ? 0 : 1 ; }
-
-int main( void ) {
-	InitIO() ;
-	InitTimers() ;
-	SptInit() ;
-	bufp = 0 ;
-	BIT_LED1 = 0 ;
-	BIT_LED2 = 1 ;
-	while (1) {
-		UpdateTimers() ;
-		SptUpdate() ;
-		SetLED(BIT_LED1, rt.ledCycle & 0x01) ;
-		SetLED(BIT_LED2, rt.ledCycle & 0x02) ;		
-		// SetLED(PT_BAC_DE, PN_BAC_DE, rt.ledCycle & 0x04) ;		
-		// SetLED(PT_SLAN_DE, PN_SLAN_DE, rt.ledCycle & 0x08) ;		
-	}
-}

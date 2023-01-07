@@ -1,142 +1,5 @@
+#include "bac2slan-hw.h"
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
-// #include <avr/signal.h>
-#include <avr/pgmspace.h>
-
-typedef uint8_t byte ;
-typedef uint16_t word ;
-
-
-typedef struct 
-{ 
-  unsigned char bit0:1; 
-  unsigned char bit1:1; 
-  unsigned char bit2:1; 
-  unsigned char bit3:1; 
-  unsigned char bit4:1; 
-  unsigned char bit5:1; 
-  unsigned char bit6:1; 
-  unsigned char bit7:1; 
-}io_reg; 
-
-// #define BIT_LED1 						((volatile io_reg*)_SFR_MEM_ADDR(PORTG))->bit5 
-// #define BIT_LED2	 					((volatile io_reg*)_SFR_MEM_ADDR(PORTE))->bit3
-
-#define BDF(pt, pn)		(((volatile io_reg*)_SFR_MEM_ADDR(pt))->bit ## pn)
-#define BIT_LED0			BDF(PORTB,7)
-#define BIT_LED1			BDF(PORTB,5)
-#define BIT_LED2			BDF(PORTB,6)
-#define BIT_BAC_DE		BDF(PORTH,3)
-#define BIT_BAC_RE		BDF(PORTH,4)
-#define BIT_SLAN_DE		BDF(PORTH,5)
-#define BIT_SLAN_RE		BDF(PORTH,6)
-
-typedef struct 
-{ 
-  unsigned char _mpcm:1; 
-	unsigned char _u2x:1; 
-  unsigned char _upe:1; 
-  unsigned char _dor:1; 
-  unsigned char _fe:1; 
-  unsigned char _udre:1; 
-  unsigned char _txc:1; 
-  unsigned char _rxc:1; 
-} UCSRnA ; 
-
-#define bUCSR0A(pn)		(((volatile UCSRnA*)_SFR_MEM_ADDR(UCSR0A))->_ ## pn)
-#define bUCSR1A(pn)		(((volatile UCSRnA*)_SFR_MEM_ADDR(UCSR1A))->_ ## pn)
-#define bUCSR2A(pn)		(((volatile UCSRnA*)_SFR_MEM_ADDR(UCSR2A))->_ ## pn)
-
-void InitIO( void ) {
-	// PORTA unused
-	DDRA = 0 ; PORTA = 0xff ;
-	// PORTB: Arduino yellow LED on PB7, Diag LEDs on PB5/6 otherwise unused
-	DDRB = 0xe0 ; PORTB = 0xff ;
-	// PORTC: unused
-	DDRC = 0 ; PORTC = 0xff ;
-	// PORTD				0=NC(I^),		1=NC(I^),			2=RXD1(I^),	3=TXD1(O^),	4=NC(I^) 		5=NC(I^),		6=NC(I^),		7=NC(I^),
-	PORTD = (byte) (0x01	 			| 0x02	 			| 0x04    	| 0x08 			| 0x10 			| 0x20  		| 0x40 			| 0x80 ) ;
-	DDRD = (byte)  (0     			| 0		 				| 0 				| 0x08 			| 0		 			| 0		  		| 0		 			| 0    ) ;
-	// PORTE				0=RXD0(I^)	1=TXD0(O^)		2=NC(I^)		3=NC(I^), 	4=SlRx2(I^)	5=BARx2(I^) 6=NC(I^),		7=NC(I^),
-	PORTE = (byte) (0x01	 			| 0x02	 			| 0x04    	| 0x08 			| 0x10 			| 0x20  		| 0x40 			| 0x80 ) ;
-	DDRE = (byte)  (0     			| 0x02 				| 0 				| 0x0 			| 0		 			| 0		  		| 0		 			| 0    ) ;
-	// PORTF: unused/Jtag
-	DDRF = 0 ; PORTF = 0xff ;
-	// PORTG: unused
-	DDRG |= 0 ; PORTF |= 0xff ;
-	// PORTH				0=RXD2(I^)	1=TXD2(O^)		2=NC(I^) 		3=BaDE(O)		4=BaRE(O^),	5=SlDE(O)		6=SlRE(O^) 	7=NC(I^)
-	PORTH = (byte) (0x01	 			| 0x02	 			| 0x04    	| 0		 			| 0x10 			| 0		  		| 0x40 			| 0x80 ) ;
-	DDRH = (byte)  (0   				| 0x02 				| 0					| 0x08 			| 0x10 			| 0x20  		| 0x40 			| 0    ) ;
-	// PORTJ: unused
-	DDRJ = 0 ; PORTJ = 0xff ;
-	// PORTK: unused
-	DDRK = 0 ; PORTK = 0xff ;
-	// PORTL: unused
-	DDRL = 0 ; PORTL = 0xff ;
-}
-
-#define T0_POSTSCALE		250		// 1ms @ ck/64
-#define T0A_10MS				200		// Number post-scaled T0 counts per 10ms
-#define NUM_ADCSAMPLES	50		// ADC samples per reading for 10V (50 x 20ms = 1sec)
-
-void memclr( register byte *p, register int count ) {
-	for ( ; count > 0 ; count--, p++) 
-		*p = 0 ;
-}
-
-typedef struct { 
-	byte lastT0 ;
-	byte ms ;
-	byte ledCycle ;
-} TRealTime ;
-TRealTime rt ;
-
-void InitTimers( void ) {
-	TCCR0A = 0 ;
-	TCCR0B = _BV(CS01) | _BV(CS00) ;	// ck/64
-	memclr((byte *) &rt, sizeof(TRealTime)) ;
-}
-
-void UpdateTimers( void ) {
-	// update timers
-	byte tmp = (byte) TCNT0 - rt.lastT0 ;
-	if (tmp < T0_POSTSCALE) return ;
-	// 1ms invt here
-	rt.lastT0 += T0_POSTSCALE ;
-	if (++rt.ms >= 250) {
-		rt.ms = 0 ;
-		if (++rt.ledCycle >= 16)
-			rt.ledCycle = 0 ;
-	} ;
-}
-
-// UBRR values for 16MHz
-#define UBRR_4800		207	// error 0.2
-#define UBRR_9600		103	// error 0.2
-#define UBRR_14400	68	// error 0.6
-#define UBRR_19200	51	// error 0.2
-#define UBRR_28800	34	// error 0.8
-#define UBRR_38400	25	// error 0.2
-#define UBRR_57600	16	// error 2.1
-#define UBRR_76800	12	// error 0.2
-#define UBRR_115200	8		// error 3.7
-
-const char hello[] PROGMEM = "Hello BACnet!!\r\n" ;
-int bufp, bufdir ;
-
-#define SptEn(n, baud) 	{  UBRR ## n = baud ; UCSR ## n ## B = _BV(TXEN ## n) | _BV(RXEN ##n) ; }
-#define SptDis(n)				{ UCSR ## n ## B = 0 ; }
-
-void DbgEnable() { 	SptEn(0, UBRR_115200) ; }
-
-void SptInit( void ) {
-	SptEn(1, UBRR_9600) ;
-	SptEn(2, UBRR_9600) ;
-	bufdir = 1 ;
-	bufp = 0 ;
-}
-void SptStop() { SptDis(0) ; SptDis(1) ; }
 
 int Test0Init() ; int Test0Update() ; int Test0End() ;
 int Test1Init() ; int Test1Update() ; int Test1End() ;
@@ -153,25 +16,21 @@ struct { int *init() ; int *update() ; int *deinit() ; } tests[] = {
 int main( void ) {
 	int8_t testn = 0, lasttest = -1 ;
 	InitIO() ;
-	InitTimers() ;
-	DbgInit() ;
 	BIT_LED1 = 0 ;
 	BIT_LED2 = 1 ;
 	while (1) {
+		UpdateIO() ;
 		if (bUCSR0A(rxc) && (ch = UDR0) >= '0' && ch <= '9') {
 			testn = ch - '0' ;
-			if (testn )
+			if (testn >= NUM_TESTS) {
+				printf("Tests: 0=blink, 1=UART1-TX, 2=UART2-TX, 3=UART1+2\n") ;
+				testn = lasttest ;
+			} ;
 		} ;
-		if (testn != lasttest) {
-			switch(testn) {
-			case 1: Test1Init() ; break ;
-
-			}
-		}
-		UpdateTimers() ;
-		SptUpdate() ;
-		// SetLED(PT_BAC_DE, PN_BAC_DE, rt.ledCycle & 0x04) ;		
-		// SetLED(PT_SLAN_DE, PN_SLAN_DE, rt.ledCycle & 0x08) ;		
+		if (testn != lasttest) { 
+			printf("Switching to test %d", testn) ;
+			InitPorts() ;			// reset to default IO
+		} ;
 		lasttest = testn ;
 	}
 }
@@ -193,6 +52,8 @@ void Test0Update( void ) {
 
 void Test1Init() {
 	SptInit() ;
+	bufdir = 1 ;
+	bufp = 0 ;
 }
 void Test1End() {
 	SptStop() ;

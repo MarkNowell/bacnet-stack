@@ -27,15 +27,15 @@
     <eraseonlaunchrule>0</eraseonlaunchrule>
     <AsfFrameworkConfig>
       <framework-data>
-  <options />
-  <configurations />
-  <files />
-  <documentation help="" />
-  <offline-documentation help="" />
-  <dependencies>
-    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.42.0" />
-  </dependencies>
-</framework-data>
+        <options />
+        <configurations />
+        <files />
+        <documentation help="" />
+        <offline-documentation help="" />
+        <dependencies>
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.42.0" />
+        </dependencies>
+      </framework-data>
     </AsfFrameworkConfig>
     <preserveEEPROM>true</preserveEEPROM>
     <avrtool>custom</avrtool>
@@ -53,22 +53,36 @@
       <ToolNumber>J41800056820</ToolNumber>
       <ToolName>Atmel-ICE</ToolName>
     </com_atmel_avrdbg_tool_atmelice>
-    <avrtoolinterface>JTAG</avrtoolinterface>
-    <avrtoolinterfaceclock>0</avrtoolinterfaceclock>
+    <avrtoolinterface>
+    </avrtoolinterface>
+    <avrtoolinterfaceclock>200000</avrtoolinterfaceclock>
     <ResetRule>0</ResetRule>
     <EraseKey />
     <custom>
-      <ToolOptions xmlns="">
+      <ToolOptions>
         <InterfaceProperties>
+          <JtagDbgClock>200000</JtagDbgClock>
+        </InterfaceProperties>
+        <InterfaceName>
+        </InterfaceName>
+      </ToolOptions>
+      <ToolType>custom</ToolType>
+      <ToolNumber>
+      </ToolNumber>
+      <ToolName>Custom Programming Tool</ToolName>
+    </custom>
+    <CustomProgrammingToolCommand>$(SolutionDir)avrdude.bat $(OutputDirectory)\$(OutputFileName).hex $(avrdevice)</CustomProgrammingToolCommand>
+    <com_atmel_avrdbg_tool_jtagicemkii>
+      <ToolOptions>
+        <InterfaceProperties>
+          <JtagDbgClock>200000</JtagDbgClock>
         </InterfaceProperties>
         <InterfaceName>JTAG</InterfaceName>
       </ToolOptions>
-      <ToolType xmlns="">custom</ToolType>
-      <ToolNumber xmlns="">
-      </ToolNumber>
-      <ToolName xmlns="">Custom Programming Tool</ToolName>
-    </custom>
-    <CustomProgrammingToolCommand>$(SolutionDir)avrdude.bat $(OutputDirectory)\$(OutputFileName).hex $(avrdevice)</CustomProgrammingToolCommand>
+      <ToolType>com.atmel.avrdbg.tool.jtagicemkii</ToolType>
+      <ToolNumber>00B0000037F3</ToolNumber>
+      <ToolName>JTAGICE mkII</ToolName>
+    </com_atmel_avrdbg_tool_jtagicemkii>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
@@ -152,6 +166,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="bac2slan-hw.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="bac2slan-hw.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="bac2slan-io.c">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

@@ -64,7 +64,7 @@ typedef struct
 #define UBRR_76800	12	// error 0.2
 #define UBRR_115200	8		// error 3.7
 
-#define SptEn(n, baud) 	{  UBRR ## n = baud ; UCSR ## n ## B = _BV(TXEN ## n) | _BV(RXEN ##n) ; }
+#define SptEn(n, baud) 	{  UBRR ## n = baud ; UCSR ## n ## B = _BV(TXEN0) | _BV(RXEN0) ; }
 #define SptDis(n)				{ UCSR ## n ## B = 0 ; }
 
 

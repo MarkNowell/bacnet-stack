@@ -66,27 +66,28 @@ void UpdateTimers( void ) {
 static int uart0_putchar(char c, FILE *stream);
 static FILE mystdout = FDEV_SETUP_STREAM(uart0_putchar, NULL, _FDEV_SETUP_WRITE) ; 
 
-#define MAX_UART_BUF      50
+#define MAX_UART_BUF      120
 
 static char u0buf[MAX_UART_BUF] ;
 static uint8_t u0head = 0, u0tail = 0 ;
 
 static int uart0_putchar(char c, FILE *stream) {
-  u0buf[u0head++] = c ;
-  if (u0head >= MAX_UART_BUF) u0head = 0 ;
-  if ((UCSR0A & UDRE0) != 0)   
-    UDR0 = c;
+  u0buf[u0head] = c ;
+  if (++u0head >= MAX_UART_BUF) u0head = 0 ;
+  // if (bUCSR0A(udre)) UDR0 = c;
   return 0;
 }
 static int uart0_update() {
-  if (u0head != u0tail && (UCSR0A & UDRE0) != 0) {
-    UDR0 = u0buf[u0tail++] ;
-    if (u0tail >= MAX_UART_BUF) u0tail = 0 ;
+  if (u0head != u0tail && bUCSR0A(udre)) {
+    UDR0 = u0buf[u0tail] ;
+    if (++u0tail >= MAX_UART_BUF) u0tail = 0 ;
   } ;
+	return 0 ;
 }
 
 void InitIO() {
   InitPorts() ;
+	InitTimers() ;
 	SptEn(0, UBRR_115200) ;     // enable Port 0 for debug 
   stdout = &mystdout;
 }

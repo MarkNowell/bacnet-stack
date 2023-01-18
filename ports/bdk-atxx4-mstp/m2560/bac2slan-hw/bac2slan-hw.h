@@ -6,6 +6,7 @@
 #include <avr/pgmspace.h>
 #include <stdio.h> 
 #include <stdint.h> 
+#include <stdbool.h>
 
 typedef uint8_t byte ;
 typedef uint16_t word ;
@@ -64,7 +65,7 @@ typedef struct
 #define UBRR_76800	12	// error 0.2
 #define UBRR_115200	8		// error 3.7
 
-#define SptEn(n, baud) 	{  UBRR ## n = baud ; UCSR ## n ## B = _BV(TXEN0) | _BV(RXEN0) ; }
+#define SptEn(n, baud) 	{  UBRR ## n = baud ; UCSR ## n ## B = _BV(TXEN0) | _BV(RXEN0) ; UCSR ## n ## C = 0x06 | _BV(UPM00) | _BV(UPM01) ; }
 #define SptDis(n)				{ UCSR ## n ## B = 0 ; }
 
 

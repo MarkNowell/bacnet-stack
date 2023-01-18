@@ -8,19 +8,19 @@ set conf=C:\Users\markn\AppData\Local\Arduino15\packages\arduino\tools\avrdude\6
 set baud=115200
 set verbose=-v -V
 rem set prog=arduino
-rem set prog=wiring
-set prog=stk500
+set prog=wiring
 
 rem Following args are provided by AS7 "Custom Programming Tool" args
-rem set hexfile=%~1
-set device=ATmega2560
+set hexfile=%~1
+set device=%~2
 
 set lf=0xff
 set hf=0xc8
 set ef=0xfd
 
 echo Running AVRDude With Command:
-echo "%avrdude%" -C"%conf%" -p%device% -c%prog% -b%baud% -D %verbose% -U lfuse:w:%lf%:m -U hfuse:w:%hf%:m -U efuse:w:%ef%:m -P%port% 2>&1
+echo "%avrdude%" -C"%conf%" -p%device% -c%prog% -b%baud% -D %verbose% -Uflash:w:"%hexfile%":i -U lfuse:w:%lf%:m -U hfuse:w:%hf%:m -U efuse:w:%ef%:m -P%port% 2>&1
 
-"%avrdude%" -C"%conf%" -p%device% -c%prog% -b%baud% -D %verbose% -U lfuse:w:%lf%:m -U hfuse:w:%hf%:m -U efuse:w:%ef%:m -P%port% 2>&1
+"%avrdude%" -C"%conf%" -p%device% -c%prog% -b%baud% -D %verbose% -Uflash:w:"%hexfile%":i -U lfuse:w:%lf%:m -U hfuse:w:%hf%:m -U efuse:w:%ef%:m -P%port% 2>&1
+
 

@@ -49,6 +49,8 @@ char *BACnet_Version = BACNET_VERSION_TEXT;
 /* For porting to IAR, see:
    http://www.avrfreaks.net/wiki/index.php/Documentation:AVR_GCC/IarToAvrgcc*/
 
+// Following fuses add WDTON and 2.7V Brown-out to defaults
+FUSES = { .low = 0xFF, .high = 0xC8, .extended = 0xFD };
 
 static void InitIO( void ) {
 	// PORTA unused
